@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Job Dashboard</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 10px; }
+        th { background-color: #333; color: white; }
+    </style>
+</head>
+<body>
+
+<h2>Job Dashboard</h2>
+<input type="text" id="jobInput" placeholder="Enter job">
+<button onclick="submitJob()">Submit</button>
+<h3 id="stats"></h3>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Payload</th>
+        <th>Status</th>
+        <th>Retries</th>
+    </tr>
+    </thead>
+    <tbody id="jobTable"></tbody>
+</table>
+
+<script>
+    async function loadJobs() {
+        const res = await fetch('/jobs/all');
+        const jobs = await res.json();
+
+        const table = document.getElementById('jobTable');
+        table.innerHTML = '';
+
+        jobs.forEach(job => {
+            const row = `
+            <tr>
+                <td>${job.id}</td>
+                <td>${job.payload}</td>
+                <td style="color: ${
+                job.status === 'SUCCESS' ? 'green' :
+                    job.status === 'FAILED' ? 'red' :
+                        job.status === 'RUNNING' ? 'orange' : 'black'
+            }">
+                    ${job.status}
+                </td>
+                <td>${job.retryCount}</td>
+            </tr>
+        `;
+            table.innerHTML += row;
+        });
+
+        document.getElementById('stats').innerText =
+            `Total Jobs: ${jobs.length}`;
+    }
+
+    // 👇 ADD THIS FUNCTION HERE
+    async function submitJob() {
+        const input = document.getElementById('jobInput').value;
+
+        await fetch('/jobs/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(input)
+        });
+
+        document.getElementById('jobInput').value = '';
+        loadJobs();
+    }
+
+    // auto refresh
+    setInterval(loadJobs, 2000);
+    loadJobs();
+</script>
+
+</body>
+</html>
