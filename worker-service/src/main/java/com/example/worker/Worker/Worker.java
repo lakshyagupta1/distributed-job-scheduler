@@ -10,6 +10,7 @@ import com.example.worker.model.Job;
 @Component
 public class Worker {
 
+    private final String workerId = "Worker-" + System.currentTimeMillis();
     @Autowired
     private StringRedisTemplate redisTemplate;
 
@@ -29,7 +30,7 @@ public class Worker {
                         String.class
                 );
 
-                System.out.println("Processing job: " + jobId);
+                System.out.println(workerId + " processing job: " + jobId);
                 //if (true) throw new RuntimeException();//to test faults and retries
                 Thread.sleep(3000);
 
@@ -40,7 +41,7 @@ public class Worker {
                         String.class
                 );
 
-                System.out.println("Completed job: " + jobId);
+                System.out.println(workerId + " completed job: " + jobId);
 
             } catch (Exception e) {
 
@@ -62,7 +63,7 @@ public class Worker {
                 if (retryCount < 3) {
                     // retry again
                     redisTemplate.opsForList().rightPush("jobQueue", jobId);
-                    System.out.println("Retrying job: " + jobId + " count=" + retryCount);
+                    System.out.println(workerId +"Retrying job: " + jobId + " count=" + retryCount);
                 } else {
                     // mark failed
                     restTemplate.postForObject(
@@ -70,7 +71,7 @@ public class Worker {
                             null,
                             String.class
                     );
-                    System.out.println("Job FAILED after retries: " + jobId);
+                    System.out.println(workerId +" Job FAILED after retries: " + jobId);
                 }
             }
         }
