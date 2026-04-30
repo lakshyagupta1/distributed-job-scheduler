@@ -26,9 +26,38 @@ public class JobService {
         // save to DB
         job = jobRepository.save(job);
 
-        // push to Redis queue
-        redisTemplate.opsForList()
-                .rightPush("jobQueue", job.getId().toString());
+        String jobId = job.getId().toString();
+
+        Long now = System.currentTimeMillis();
+
+        // 🔹 1. Check if job is scheduled for future
+        if (job.getScheduledTime() != null && job.getScheduledTime() > now) {
+
+            redisTemplate.opsForList()
+                    .rightPush("delayedQueue", jobId);
+
+        } else {
+
+            // 🔹 2. Handle priority
+            String priority = job.getPriority();
+
+            if ("HIGH".equalsIgnoreCase(priority)) {
+
+                redisTemplate.opsForList()
+                        .rightPush("highPriorityQueue", jobId);
+
+            } else if ("LOW".equalsIgnoreCase(priority)) {
+
+                redisTemplate.opsForList()
+                        .rightPush("lowPriorityQueue", jobId);
+
+            } else {
+
+                // default = NORMAL
+                redisTemplate.opsForList()
+                        .rightPush("jobQueue", jobId);
+            }
+        }
 
         return job;
     }

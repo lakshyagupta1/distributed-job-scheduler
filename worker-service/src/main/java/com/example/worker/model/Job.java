@@ -7,9 +7,13 @@ public class Job {
     private String data;
     private String status;
     private int retryCount;
+    private Long scheduledTime;
+    private String priority;
 
     public Job() {
     }
+
+    // --- Getters ---
 
     public Long getId() {
         return id;
@@ -31,6 +35,16 @@ public class Job {
         return retryCount;
     }
 
+    public Long getScheduledTime() {
+        return scheduledTime;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    // --- Setters ---
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -49,5 +63,13 @@ public class Job {
 
     public void setRetryCount(int retryCount) {
         this.retryCount = retryCount;
+    }
+
+    public void setScheduledTime(Long scheduledTime) {
+        this.scheduledTime = scheduledTime;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
     }
 }
