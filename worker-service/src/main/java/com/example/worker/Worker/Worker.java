@@ -51,7 +51,7 @@ public class Worker {
     // =========================
     // DELAYED JOB HANDLER
     // =========================
-    @Scheduled(fixedDelay = 2000)
+    @Scheduled(fixedDelay = 500)
     public void moveDelayedJobs() {
 
         List<String> jobs = redisTemplate.opsForList().range("delayedQueue", 0, -1);
@@ -174,6 +174,7 @@ public class Worker {
     }
 
     private void logMessage(String msg) {
+        sleep(3000);
         log("Log: " + msg);
     }
 
