@@ -17,15 +17,18 @@ public class JobService {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
-    public Job submitJob(String payload) {
-        Job job = new Job();
-        job.setPayload(payload);
-        job.setStatus("PENDING");
+    public Job submitJob(Job job) {
 
+        // default values
+        job.setStatus("PENDING");
+        job.setRetryCount(0);
+
+        // save to DB
         job = jobRepository.save(job);
 
-        // Push job to Redis queue
-        redisTemplate.opsForList().rightPush("jobQueue", job.getId().toString());
+        // push to Redis queue
+        redisTemplate.opsForList()
+                .rightPush("jobQueue", job.getId().toString());
 
         return job;
     }

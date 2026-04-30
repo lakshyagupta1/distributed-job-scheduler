@@ -9,20 +9,29 @@ public class Job {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String payload;
-    private String status;
+    private String jobType;   // EMAIL, FILE, LOG
+    private String data;      // actual data
+    private String status = "PENDING";
     private int retryCount = 0;
 
     public Long getId() {
         return id;
     }
 
-    public String getPayload() {
-        return payload;
+    public String getJobType() {
+        return jobType;
     }
 
-    public void setPayload(String payload) {
-        this.payload = payload;
+    public void setJobType(String jobType) {
+        this.jobType = jobType;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
     }
 
     public String getStatus() {

@@ -15,8 +15,8 @@ public class JobController {
 
     // Submit job
     @PostMapping("/submit")
-    public Job submitJob(@RequestBody String payload) {
-        return jobService.submitJob(payload);
+    public Job submitJob(@RequestBody Job job) {
+        return jobService.submitJob(job);
     }
 
     // Get job status
@@ -24,14 +24,20 @@ public class JobController {
     public Job getJob(@PathVariable Long id) {
         return jobService.getJob(id).orElseThrow();
     }
+
+    // Update status (called by worker)
     @PostMapping("/update/{id}/{status}")
     public void updateStatus(@PathVariable Long id, @PathVariable String status) {
         jobService.updateStatus(id, status);
     }
+
+    // Retry job
     @PostMapping("/retry/{id}")
     public void retryJob(@PathVariable Long id) {
         jobService.incrementRetry(id);
     }
+
+    // Get all jobs (for dashboard)
     @GetMapping("/all")
     public List<Job> getAllJobs() {
         return jobService.getAllJobs();
