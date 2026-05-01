@@ -1,6 +1,7 @@
 package com.example.worker.Worker;
 
 import com.example.worker.model.Job;
+import com.example.worker.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -18,6 +19,8 @@ public class Worker {
     private StringRedisTemplate redisTemplate;
 
     private final RestTemplate restTemplate = new RestTemplate();
+    @Autowired
+    private EmailService emailService;
 
     // =========================
     // MAIN JOB PROCESSOR
@@ -114,7 +117,7 @@ public class Worker {
         switch (type.toUpperCase()) {
 
             case "EMAIL":
-                sendEmail(data);
+                emailService.sendEmail(data);
                 break;
 
             case "FILE":
