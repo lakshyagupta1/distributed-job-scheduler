@@ -132,6 +132,11 @@ public class JobService {
 
         return result;
     }
+    public void updateResult(Long id, String result) {
+        Job job = jobRepository.findById(id).orElseThrow();
+        job.setResult(result);
+        jobRepository.save(job);
+    }
     private boolean isValidEmail(String email) {
         return email.matches("^[A-Za-z0-9+_.-]+@(.+)$");
     }

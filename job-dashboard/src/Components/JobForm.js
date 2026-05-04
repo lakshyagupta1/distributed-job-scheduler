@@ -21,7 +21,6 @@ function JobForm({
 
     <select value={jobType} onChange={(e) => setJobType(e.target.value)}>
       <option value="EMAIL">EMAIL</option>
-      <option value="FILE">FILE</option>
       <option value="LOG">LOG</option>
     </select>
 

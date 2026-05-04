@@ -2,6 +2,7 @@ package com.example.worker.Worker;
 
 import com.example.worker.model.Job;
 import com.example.worker.service.EmailService;
+import com.example.worker.service.FileProcessingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Component
 public class Worker {
@@ -21,6 +24,8 @@ public class Worker {
     private final RestTemplate restTemplate = new RestTemplate();
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private FileProcessingService fileProcessingService;
 
     // =========================
     // MAIN JOB PROCESSOR
@@ -122,7 +127,7 @@ public class Worker {
                 break;
 
             case "FILE":
-                processFile(data);
+                handleFileJob(job.getId().toString(), job.getData());
                 break;
 
             case "LOG":
@@ -131,6 +136,42 @@ public class Worker {
 
             default:
                 throw new RuntimeException("Unknown job type: " + type);
+        }
+    }
+    public void handleFileJob(String jobId, String filePath) {
+
+        try {
+            Map<String, Object> result = fileProcessingService.processCsv(filePath);
+
+            int valid = (int) result.get("valid");
+            int invalid = (int) result.get("invalid");
+            int duplicates = (int) result.get("duplicates");
+
+            Set<String> emails = (Set<String>) result.get("emails");
+
+            // 🔥 create email jobs
+            for (String email : emails) {
+                emailService.createEmailJob(email);
+            }
+
+            String summary = "Valid: " + valid +
+                    ", Invalid: " + invalid +
+                    ", Duplicates: " + duplicates;
+
+            restTemplate.postForObject(
+                    "http://localhost:8080/jobs/updateResult/" + jobId + "?result=" + summary,
+                    null,
+                    String.class
+            );
+
+            restTemplate.postForObject(
+                    "http://localhost:8080/jobs/update/" + jobId + "/SUCCESS",
+                    null,
+                    String.class
+            );
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

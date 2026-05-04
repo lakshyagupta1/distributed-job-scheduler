@@ -15,6 +15,7 @@ function JobTable({ jobs }) {
             <th>Scheduled</th>
             <th>Priority</th>
             <th>Retries</th>
+            <th>Results</th>
           </tr>
         </thead>
 
@@ -24,6 +25,7 @@ function JobTable({ jobs }) {
               <td>{job.id}</td>
               <td>{job.jobType}</td>
               <td>{job.data}</td>
+              
 
               <td className={
                 job.status === "SUCCESS"
@@ -45,6 +47,7 @@ function JobTable({ jobs }) {
 
               <td>{job.priority}</td>
               <td>{job.retryCount}</td>
+              <td>{job.result}</td>
             </tr>
           ))}
         </tbody>

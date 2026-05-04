@@ -60,3 +60,40 @@ body {
 .status-success { color: #22c55e; }
 .status-failed { color: #ef4444; }
 .status-running { color: #f59e0b; }
+.upload-card {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+
+  width: 100%;          
+  max-width: 1000px;    
+  margin: 20px auto;    
+}
+
+.upload-left {
+  flex: 1;
+}
+
+.upload-right {
+  flex: 1;
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 12px;
+}
+.upload-section {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.bulk {
+  flex: 2;   /* 66% */
+}
+
+.file {
+  flex: 1;   /* 34% */
+}

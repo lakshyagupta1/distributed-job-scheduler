@@ -4,6 +4,7 @@ import JobForm from "./Components/JobForm";
 import JobTable from "./Components/JobTable";
 import StatsCards from "./Components/StatsCards";
 import CsvUpload from "./Components/CsvUpload";
+import FileUpload from "./Components/FileUpload";
 
 function App() {
 
@@ -74,7 +75,15 @@ function App() {
         setTime={setTime}
         submitJob={submitJob}
       />
-      <CsvUpload />
+      <div className="upload-section">
+  <div className="bulk">
+    <CsvUpload />
+  </div>
+
+  <div className="file">
+    <FileUpload />
+  </div>
+</div>
 
       <StatsCards jobs={jobs} />
 

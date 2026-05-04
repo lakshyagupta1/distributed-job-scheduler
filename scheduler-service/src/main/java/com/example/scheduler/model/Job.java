@@ -16,6 +16,9 @@ public class Job {
     private String priority;     // HIGH, NORMAL, LOW
     private int retryCount = 0;
 
+    // 🔥 NEW FIELD
+    private String result;
+
     // --- Getters ---
 
     public Long getId() {
@@ -46,6 +49,10 @@ public class Job {
         return retryCount;
     }
 
+    public String getResult() {
+        return result;
+    }
+
     // --- Setters ---
 
     public void setId(Long id) {
@@ -74,5 +81,9 @@ public class Job {
 
     public void setRetryCount(int retryCount) {
         this.retryCount = retryCount;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
     }
 }
