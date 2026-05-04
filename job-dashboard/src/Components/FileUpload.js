@@ -46,7 +46,7 @@ function FileUpload() {
   };
 
   return (
-    <div className="card">
+    <div className="upload-card">
 
       {/* 🔹 Title */}
       <h2 >
