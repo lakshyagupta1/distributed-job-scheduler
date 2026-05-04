@@ -25,7 +25,7 @@ public class Worker {
     // =========================
     // MAIN JOB PROCESSOR
     // =========================
-    @Scheduled(fixedDelay = 3000)
+    @Scheduled(fixedDelay = 100)
     public void processJob() {
 
         String jobId = fetchJobFromQueues();
@@ -117,7 +117,8 @@ public class Worker {
         switch (type.toUpperCase()) {
 
             case "EMAIL":
-                emailService.sendEmail(data);
+                //emailService.sendEmail(data);
+                sendEmail(data);
                 break;
 
             case "FILE":
@@ -166,7 +167,7 @@ public class Worker {
     //No usage Right now
     private void sendEmail(String email) {
         log("Sending email to " + email);
-        sleep(2000);
+        sleep(500);
         log("Email sent to " + email);
     }
 

@@ -5,7 +5,15 @@ import com.example.scheduler.repository.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -78,5 +86,53 @@ public class JobService {
     }
     public List<Job> getAllJobs() {
         return jobRepository.findAll();
+    }
+
+    public Map<String, Object> processCsv(MultipartFile file) throws Exception {
+
+        List<String> lines = new BufferedReader(
+                new InputStreamReader(file.getInputStream()))
+                .lines()
+                .skip(1) // skip header
+                .toList();
+
+        int success = 0;
+        int failed = 0;
+
+        for (String line : lines) {
+            if (line.trim().isEmpty()) continue;
+            try {
+                String[] parts = line.split(",");
+
+                String email = parts[0].trim();
+                String priority = parts[1].trim();
+
+                if (!isValidEmail(email)) {
+                    failed++;
+                    continue;
+                }
+
+                Job job = new Job();
+                job.setJobType("EMAIL");
+                job.setData(email);
+                job.setPriority(priority);
+
+                submitJob(job);
+                success++;
+
+            } catch (Exception e) {
+                failed++;
+                System.out.println("Error processing line: " + line);
+            }
+        }
+        Map<String, Object> result = new HashMap<>();
+        result.put("success", success);
+        result.put("failed", failed);
+        result.put("total", success + failed);;
+
+        return result;
+    }
+    private boolean isValidEmail(String email) {
+        return email.matches("^[A-Za-z0-9+_.-]+@(.+)$");
     }
 }

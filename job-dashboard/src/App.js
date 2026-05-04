@@ -3,6 +3,7 @@ import "./App.css";
 import JobForm from "./Components/JobForm";
 import JobTable from "./Components/JobTable";
 import StatsCards from "./Components/StatsCards";
+import CsvUpload from "./Components/CsvUpload";
 
 function App() {
 
@@ -73,6 +74,7 @@ function App() {
         setTime={setTime}
         submitJob={submitJob}
       />
+      <CsvUpload />
 
       <StatsCards jobs={jobs} />
 

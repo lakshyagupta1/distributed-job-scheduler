@@ -13,6 +13,7 @@ function JobForm({
   setTime,
   submitJob
 }) {
+  
   return (<div className="card">
   <div className="title">Submit Job</div>
 

@@ -4,7 +4,12 @@ import com.example.scheduler.model.Job;
 import com.example.scheduler.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -42,6 +47,12 @@ public class JobController {
     @GetMapping("/all")
     public List<Job> getAllJobs() {
         return jobService.getAllJobs();
+    }
+
+    //Bulk Jobs Upload
+    @PostMapping("/upload")
+    public Map<String, Object> uploadCsv(@RequestParam("file") MultipartFile file) throws Exception {
+        return jobService.processCsv(file);
     }
 }
 
