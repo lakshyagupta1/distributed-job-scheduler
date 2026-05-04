@@ -163,7 +163,7 @@ public class Worker {
     // =========================
     // JOB IMPLEMENTATIONS
     // =========================
-
+    //No usage Right now
     private void sendEmail(String email) {
         log("Sending email to " + email);
         sleep(2000);
